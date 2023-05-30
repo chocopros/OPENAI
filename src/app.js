@@ -4,21 +4,21 @@ const os = require('os') //SystemInfo
 //* Variables de Entorno
 require("dotenv").config();
 
-//? ejecute Express
-const app = express();
-
-//? use type json
-app.use(express.json());
-
 //> Dependencies AI
 const { Configuration, OpenAIApi } = require('openai')
 
 const configuration = new Configuration({
     apiKey: process.env.OPEN_AI_KEY,
+
 });
 
 const openai = new OpenAIApi(configuration);
 
+//? ejecute Express
+const app = express();
+
+//? use type json
+app.use(express.json());
 
 
 //> Q & A Preguntas y respuestas
@@ -53,13 +53,46 @@ app.post("/chat", async (req, res) => {
 );
 
 
+//> Completion
+app.post("/find-complexity", async ( req, res ) => {
+    try {
+        const { prompt } = req.body;
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `
+                 Say this is a test       
+                `,
+            max_tokens: 64,
+            temperature: 0,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+            stop: ["\n"],
+        });
+
+        return res.status(200).json({
+            success: true,
+            data: response.data
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            error: error.response
+                ? error.response.data
+                : "There was an issue on the server",
+        });
+    }
+});
+
+
 //> IMG Generation
 app.post("/generation-img", async ( req, res ) => {
 
     const imgGenerate = async() => {
-        const { prompt } = req.body
+        const { promptIn } = req.body
+        console.log(promptIn)
         const response = await openai.createImage({
-            prompt: prompt,
+            prompt: `${promptIn}`,
             n: 1,
             size: "512x512"
         })
@@ -71,7 +104,7 @@ app.post("/generation-img", async ( req, res ) => {
         .then(r => res.status(201).json({
             url: r
         }))
-        .catch(err => res.status(400).json({message: err}))
+        .catch(err => res.status(400).json({message: error}))
 });
 
 
