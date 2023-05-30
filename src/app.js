@@ -2,27 +2,56 @@
 const express = require('express') //Framework
 const os = require('os') //SystemInfo
 
-//> Dependencies AI
-const {Configuration, OpenAIApi} = require('openai')
-
 //* Variables de Entorno
 require("dotenv").config();
 
-//? ejecute Express
-const app = express()
+//> Dependencies AI
+const {Configuration, OpenAIApi} = require('openai')
 
+const configuration = new Configuration({
+    apiKey: "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",
+
+});
+
+const openai = new OpenAIApi(configuration);
+
+
+
+//? ejecute Express
+const app = express();
 
 //? use type json
-app.use(express.json())
+app.use(express.json());
+
+
+app.post("/find", async ( req, res ) => {
+    try {
+        const {prompt} = req.body
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `
+                ${prompt.value}
+            `,
+            max_tokens: 64,
+            temperature: 0,
+            top_p: 1.0,
+            frequency_penalty: 0.0,
+            presence_penalty: 0.0,
+            stop: ["\n"]
+
+        });
+        return res.status(200).json({
+            sucess: true,
+            data: response.data
+        })
+    } catch (error) {
+        return res.status(400).json({message: error})
+    }
+});
+
 
 // Principal Main PAge
 app.get('/', (req, res, next) => {
-    console.log((os.uptime()/60)/60)
-    console.log(os.homedir())
-    console.log("UserInfo: " + os.userInfo().username);
-    console.log("Architecture: " + os.cpus()[1].model +" "+ os.arch() );
-    console.log("Platform: " +os.type + " " + os.platform() + " " + os.release())
-    os.cpus()
     next()
 }, (req, res) => {
     const reque = req.method
@@ -32,8 +61,18 @@ app.get('/', (req, res, next) => {
     })
 });
 
+//> GET DATA SYSTEM
+const systemInfo = {
+    user: os.userInfo().username,
+    Architecture: os.cpus()[1].model + " " + os.arch(),
+    Platform: os.type + " " + os.platform() + " " + os.release()
+};
 
-const port = 9000;
+
+//> SERVER LISTEN
+const port = process.env.PORT || 8000;
 app.listen(port, () => {
-    console.log("SERVER START")
-})
+    console.log(`>>> SERVER LISTENING ON PORT: ${port}`)
+    console.log(systemInfo)
+});
+
