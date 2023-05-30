@@ -1,7 +1,6 @@
 //* Dependencies
 const express = require('express') //Framework
 const os = require('os') //SystemInfo
-
 //* Variables de Entorno
 require("dotenv").config();
 
@@ -9,7 +8,7 @@ require("dotenv").config();
 const {Configuration, OpenAIApi} = require('openai')
 
 const configuration = new Configuration({
-    apiKey: "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",
+    apiKey: process.env.OPEN_AI_KEY,
 
 });
 
@@ -24,33 +23,42 @@ const app = express();
 app.use(express.json());
 
 
-app.post("/find", async ( req, res ) => {
+
+app.post("/find-complexity", async (req, res) => {
     try {
-        const {prompt} = req.body
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: `
-                ${prompt.value}
-            `,
-            max_tokens: 64,
-            temperature: 0,
-            top_p: 1.0,
-            frequency_penalty: 0.0,
-            presence_penalty: 0.0,
-            stop: ["\n"]
-
-        });
-        return res.status(200).json({
-            sucess: true,
-            data: response.data
-        })
+      const { prompt } = req.body;
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: `
+                ${prompt}
+        
+                The time complexity of this function is
+                ###
+              `,
+        max_tokens: 64,
+        temperature: 0,
+        top_p: 1.0,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
+        stop: ["\n"],
+      });
+  
+      return res.status(200).json({
+        success: true,
+        data: response.data
+      });
     } catch (error) {
-        return res.status(400).json({message: error})
+      return res.status(400).json({
+        success: false,
+        error: error.response
+          ? error.response.data
+          : "There was an issue on the server",
+      });
     }
-});
+  });
 
 
-// Principal Main PAge
+//> Principal Main PAge
 app.get('/', (req, res, next) => {
     next()
 }, (req, res) => {
