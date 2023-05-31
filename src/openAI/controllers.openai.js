@@ -4,7 +4,7 @@ const openai = require('../utils/connect.openai')
 
 //> Q & A Preguntas y respuestas
 const answerAi = async (ask) => {
-    return await openai.createChatCompletion({
+   const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: ask }],
         max_tokens: 70,
@@ -14,6 +14,8 @@ const answerAi = async (ask) => {
         presence_penalty: 0.0,
         //stop: ["\n"], 
     });
+
+    return response.data.choices[0].message
 };
 
 
@@ -41,3 +43,7 @@ imgGenerate("perro volador")
     .then(r => console.log(r))
     .catch(err => console.log(err))
 */
+
+answerAi('hola mundo')
+    .then(r => console.log(r))
+    .catch(err => console.log(err))
