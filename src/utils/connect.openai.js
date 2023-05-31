@@ -1,7 +1,6 @@
 //* Variables de Entorno
 require("dotenv").config();
 
-
 //> Dependencies AI
 const { Configuration, OpenAIApi } = require('openai')
 
