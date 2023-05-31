@@ -6,10 +6,10 @@ const controllersOpenAi = require("./controllers.openai")
 //> Answer & Ask
 const answerToAi = async (req, res) => {
     const { contentIn } = req.body
-    if (!promptIn) {
+    if (!contentIn) {
         res.status(400).json({
             fields: {
-                promptIn: "string Js Descriptions"
+                contentIn: "string Js Descriptions"
             }
         })
     } else {
@@ -26,7 +26,7 @@ const imgCreate = async (req, res) => {
     if (!promptIn) {
         res.status(400).json({
             fields: {
-                promptIn: "string Js Descriptions"
+                promptIn: "Image details Descriptions"
             }
         })
     } else {

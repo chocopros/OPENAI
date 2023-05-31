@@ -24,7 +24,7 @@ app.get('/', (req, res, next) => {
 });
 
 //>>> Router USE
-app.use('/', openAiRouter)
+app.use('/api/v1', openAiRouter)
 
 
 //> GET DATA SYSTEM

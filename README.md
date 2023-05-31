@@ -4,3 +4,8 @@
 
 ---
 
+# REQUEST
+
+- localhost:9000/v1/api/chat --> Preguntas y respuestas
+- localhost:9000/v1/api/generation-img --> Generar imagenes a partir de una descripcion
+- localhost:9000/v1/api/jsgenerate --> Generar codigo Js a partir de un descripcion del Codigo
