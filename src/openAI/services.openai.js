@@ -43,7 +43,11 @@ const jsGenerated = async ( req, res ) => {
     if (!promptIn) {
         res.status(400).json({
             fields: {
-                promptIn: "string Js Descriptions"
+                promptIn: "string Js Descriptions",
+                prompt_Example: {
+                    InterviewQuestions: "Create a list of 8 questions for my interview with a science fiction author:",
+                    MicroHorrorStory: "Topic: Wind // two-Setence Horror Sthory:"
+                }
             }
         })
     } else {

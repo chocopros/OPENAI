@@ -45,6 +45,11 @@ const jsGenerate = async (desc) => {
     return response.data.choices[0].text
 };
 
+//> GENERATOR DE LISTAS DE PREGUNTA
+const askListAi = async(orden) => {
+    
+};
+
 
 module.exports = {
     answerAi,
