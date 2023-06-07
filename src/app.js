@@ -16,15 +16,21 @@ const openAiRouter = require('./openAI/route.openai')
 app.get('/', (req, res, next) => {
     next()
 }, (req, res) => {
-    const reque = req.method
+    //const reque = req.method
     res.status(200).json({
         STATUS_SERVER: "OK!!!",
-        TYPE_req: reque
+        LINK_SERVICES: {
+            reqMethod_POST:{
+                chat: 'http://localhost:9000/api/v1/openai/chat',
+                generationImg: 'http://localhost:9000/api/v1/openai/generation-img',
+                jsgenerate: 'http://localhost:9000/api/v1/openai/jsgenerate'
+            }
+        }
     })
 });
 
 //>>> Router USE
-app.use('/api/v1', openAiRouter)
+app.use('/api/v1/openai', openAiRouter)
 
 
 //> GET DATA SYSTEM
